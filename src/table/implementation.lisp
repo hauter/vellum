@@ -625,18 +625,12 @@
         (print-with-padding i j))
       (terpri output))))
 
-; Check if it is currently running in Jupyter.
-; Also see: https://github.com/yitzchak/common-lisp-jupyter
-(defun run-in-jupyter-p ()
-      (and (string= "JUPYTER" (package-name (symbol-package (type-of *standard-output*))))
-          (string= "IOPUB-STREAM" (symbol-name (type-of *standard-output*)))))
-
 (defmethod print-object ((object fundamental-table) stream)
   (cond ((run-in-jupyter-p)
-         (funcall (find-symbol "HTML" :JUPYTER)
-                  (with-output-to-string (string-stream) (show :html object  :output string-stream :end 10))
-                  :display t))
-        (*print-pretty* (print-unreadable-object (object stream) (show :text object :output stream)))
+         (show :html object :output (symbol-value (find-symbol "*HTML-OUTPUT*" :JUPYTER)) :end 10))
+        (*print-pretty*
+            (print-unreadable-object (object stream)
+              (show :text object :output stream)))
         (t (call-next-method)))
   object)
 
