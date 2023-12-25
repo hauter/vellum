@@ -57,6 +57,7 @@
    #:standard-table-range
    #:standard-transformation-row
    #:to-table
+   #:hash-tables-columns
    #:transform
    #:transform-row
    #:transformation

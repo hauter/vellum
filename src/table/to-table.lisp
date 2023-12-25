@@ -9,6 +9,7 @@
                        (wrap-errors *wrap-errors*)
                        (after #'identity)
                        &allow-other-keys)
+
   (cl-ds.utils:lazy-let ((header (vellum.header:read-header range))
                          (function (ensure-function (bind-row-closure body :header header)))
                          (transformation (~> (table-from-header class header)
@@ -62,14 +63,19 @@
                        (wrap-errors *wrap-errors*)
                        (after #'identity)
                        (header (apply #'vellum.header:make-header columns)))
-  (to-table (cl-ds:whole-range input)
-            :key key
-            :class class
-            :enable-restarts enable-restarts
-            :wrap-errors wrap-errors
-            :body body
-            :after after
-            :header header))
+  (let ((input-range
+          (if (every #'hash-table-p input)
+              (hash-table-values-range input columns)
+              (cl-ds:whole-range input))))
+    (to-table input-range
+     :key key
+     :class class
+     :enable-restarts enable-restarts
+     :wrap-errors wrap-errors
+     :body body
+     :after after
+     :header header)))
+
 
 
 (defmethod to-table ((input array)
@@ -110,3 +116,4 @@
                      :enable-restarts enable-restarts
                      :wrap-errors wrap-errors
                      :in-place t))))
+

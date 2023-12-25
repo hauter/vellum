@@ -229,3 +229,18 @@
 (defun run-in-jupyter-p ()
   (and (string= "JUPYTER" (package-name (symbol-package (type-of *standard-output*))))
        (string= "IOPUB-STREAM" (symbol-name (type-of *standard-output*)))))
+
+(defun hash-tables-columns (dict-list)
+  "Get all columns from hash-tabls"
+  (loop with result = nil for d in dict-list
+        do (loop for key in (hash-table-keys d)
+                 do (pushnew key result :test #'string=))
+        finally (return result)))
+
+(defun hash-table-values-range (dict-list keys)
+  (loop with result = nil for d in dict-list
+        collect (hash-table-values-by-keys d keys)))
+
+(defun hash-table-values-by-keys (dict keys)
+  (loop for key in keys
+        collect (serapeum:@ dict key)))
