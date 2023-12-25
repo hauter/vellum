@@ -549,33 +549,6 @@
                   (format output "</td>~%"))))
     (bind ((column-count (column-count table))
            (end (min end (row-count table)))
-<<<<<<< HEAD
-           (header (header table)))
-    (format output
-            "<p>~a columns × ~a rows. Printed rows from ~a below ~a:~%</p>"
-            column-count
-            (row-count table)
-            (min start end)
-            end)
-
-    (table
-       (tr
-        (iterate
-          (for j from 0 below column-count)
-          (for string = (or (ignore-errors
-                             (vellum.header:index-to-name header j))
-                            (format nil "~a" j)))
-          (th string)))
-       (transform table
-                  (bind-row ()
-                            (tr
-                             (iterate
-                               (for j from 0 below column-count)
-                               (td (rr j)))))
-                  :start start
-                  :end end
-                  :in-place t))))
-=======
            (header (header table))
            (depth -2))
       (div
@@ -602,7 +575,6 @@
           :start start
           :end end
           :in-place t)))))
->>>>>>> upstream/master
   table)
 
 
